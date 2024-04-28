@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.ekan.planosaude.beneficiario.entities.Documento;
+import br.com.ekan.planosaude.beneficiario.model.Documento;
 import br.com.ekan.planosaude.beneficiario.repositories.DocumentoRepository;
 
 @Service
