@@ -1,11 +1,10 @@
 package br.com.ekan.planosaude.beneficiario.controllers;
 
-import java.util.Date;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,63 +14,59 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import br.com.ekan.planosaude.beneficiario.entities.Beneficiario;
+import br.com.ekan.planosaude.beneficiario.model.BeneficiarioResponse;
+import br.com.ekan.planosaude.beneficiario.model.BeneficiarioRequest;
 import br.com.ekan.planosaude.beneficiario.service.BeneficiarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/beneficiarios")
+@RequiredArgsConstructor
 public class BeneficiarioController {
 	
-	@Autowired
-	BeneficiarioService service;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	private final BeneficiarioService service;
 	
-	@PostMapping
+	@PostMapping(value = "create")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Beneficiario inserir(@RequestBody Beneficiario beneficiario) {
-		beneficiario.setDataAtualizacao(new Date());
-		beneficiario.setDataInclusao(new Date());
-		Beneficiario save = service.inserir(beneficiario);
-		return save;
+	@Operation(summary = "Cria um novo Beneficiario", description = "Para executar a criação de um novo beneficiario é necessário autenticar.")
+	@ApiResponse(responseCode = "409", description = "Error undefined",content =@Content(schema = @Schema(ref = "ApiErrorResponse"), mediaType = MediaType.APPLICATION_JSON_VALUE))
+	public ResponseEntity<BeneficiarioResponse> create (@Valid @RequestBody BeneficiarioRequest beneficiario) {
+		return ResponseEntity.ok(service.create(beneficiario)); 
+		
 	}
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
-	public List<Beneficiario> buscarTodos(){
-		return service.buscarTodos();
+	public ResponseEntity<List<BeneficiarioResponse>> findAll(){
+		return ResponseEntity.ok(service.findAll());
 	}
 	
-	@GetMapping(value = "/{id}")
-	public Beneficiario buscarPorId(@PathVariable("id") Long id){
-		return service.buscarPorId(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Beneficiario não encontrado"));
+	@GetMapping(value = "findByUuid/{uuid}")
+	public ResponseEntity<BeneficiarioResponse> findByUuid(@PathVariable("uuid") String id){
+		return ResponseEntity.ok(service.findByUuid(id));
+				
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("remove/{uuid}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void deletar (@PathVariable("id") Long id){
-		service.buscarPorId(id)
-		.map(beneficiario -> {
-			service.deletar(beneficiario.getId());
-			return Void.TYPE;
-		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Não foi possivel deletar benefeiciario"));
-	}
-	
-	@PutMapping("/{id}")
-	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void atualizar(@PathVariable("id")Long id, @RequestBody Beneficiario beneficiario) {
-		service.buscarPorId(id)
-		.map(beneficiarioBase -> {
-			modelMapper.map(beneficiario, beneficiarioBase);
-			beneficiario.setDataAtualizacao(new Date());
-			service.inserir(beneficiario);
-			return Void.TYPE;
-		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Beneficiario não encontrado"));
-	}
+	public ResponseEntity<Void> remove(@PathVariable("uuid") String id) {
+		 service.remove(id);
+		 return ResponseEntity.status(HttpStatus.OK).build();
 		
+	}
+	
+	@PutMapping("update/{uuid}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public ResponseEntity<BeneficiarioResponse> replace(@PathVariable("uuid")Long uuid, @RequestBody BeneficiarioRequest beneficiario) {
+		return ResponseEntity.ok(service.create(beneficiario));
+		
+	}
 
 }

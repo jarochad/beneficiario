@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.com.ekan.planosaude.beneficiario.entities.Documento;
+import br.com.ekan.planosaude.beneficiario.model.Documento;
 import br.com.ekan.planosaude.beneficiario.service.DocumentoService;
 
 @RestController
@@ -41,13 +41,13 @@ public class DocumentoController {
 		return service.buscarTodos();
 	}
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "buscarPorId/{id}")
 	public Documento buscarPorId(@PathVariable("id") Long id){
 		return service.buscarPorId(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Documento não encontrado"));
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("deletar/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deletar (@PathVariable("id") Long id){
 		service.buscarPorId(id)
@@ -57,7 +57,7 @@ public class DocumentoController {
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Não foi possivel deletar Documento"));
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping("atualizar/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void atualizar(@RequestBody Documento documento) {
 		service.buscarPorId(documento.getId())
