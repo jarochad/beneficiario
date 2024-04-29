@@ -17,32 +17,26 @@ import lombok.RequiredArgsConstructor;
 public class BeneficiarioConverter {
 
 	private final ModelMapper mapper;
-	
+
 	private final DocumentoConverter documentoConverter;
-	
-	public Beneficiario toEntity(BeneficiarioRequest request) {
-		Beneficiario b = mapper.map(request, Beneficiario.class);
-		List<Documento> d = documentoConverter.toEntityList(request.getDocumentos());
-		for (Documento documento : d) {
-				documento.setBeneficiario(b);
-		}
-		b.setDocumentos(d);
-		return b;
+
+	public Beneficiario toEntity(BeneficiarioRequest beneficiarioRequest) {
+			Beneficiario beneficiario = mapper.map(beneficiarioRequest, Beneficiario.class);
+			List<Documento> documentos = documentoConverter.toEntityList(beneficiarioRequest.getDocumentos());
+			documentos.stream().forEach(documento -> {
+				documento.setBeneficiario(beneficiario);
+			});
+			beneficiario.setDocumentos(documentos);
+		return beneficiario;
 	}
-	
+
 	public BeneficiarioResponse toResponse(Beneficiario beneficiario) {
 		return mapper.map(beneficiario, BeneficiarioResponse.class);
 	}
-	
+
 	public List<BeneficiarioResponse> toResponseList(List<Beneficiario> beneficiarios) {
-		return mapper.map(beneficiarios,new TypeToken<List<BeneficiarioResponse>>() {}.getType());
+		return mapper.map(beneficiarios, new TypeToken<List<BeneficiarioResponse>>() {
+		}.getType());
 	}
-
-	public Beneficiario EntityToEntity(Beneficiario beneficiarioUpdate, Beneficiario b) {
-				
-		return null;
-	}
-
-
 
 }

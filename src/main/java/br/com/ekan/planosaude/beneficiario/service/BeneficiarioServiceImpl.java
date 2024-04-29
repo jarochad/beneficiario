@@ -58,21 +58,21 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 		mapper.map(beneficiarioUpdate, beneficiarioBase);
 
-		/*
-		 * if(!CollectionUtils.isEmpty(beneficiarioUpdate.getDocumentos())) {
-		 * if(!CollectionUtils.isEmpty(beneficiarioBase.getDocumentos())){
-		 * beneficiarioBase.setDocumentos(null);
-		 * 
-		 * beneficiarioBase.getDocumentos().stream().forEach(doc -> {
-		 * documentoRepository.delete(doc); });
-		 * 
-		 * } List<Documento> documentos =
-		 * docConverter.toEntityList(beneficiarioUpdate.getDocumentos());
-		 * 
-		 * documentos.stream().forEach(docEntity ->
-		 * {docEntity.setBeneficiario(beneficiarioBase);});
-		 * beneficiarioBase.setDocumentos(documentos); }
-		 */
+		if (!CollectionUtils.isEmpty(beneficiarioUpdate.getDocumentos())) {
+			if (!CollectionUtils.isEmpty(beneficiarioBase.getDocumentos())) {
+				beneficiarioBase.getDocumentos().stream().forEach(doc -> {
+					documentoRepository.delete(doc);
+				});
+
+			}
+			List<Documento> documentos = docConverter.toEntityList(beneficiarioUpdate.getDocumentos());
+
+			documentos.stream().forEach(docEntity -> {
+				docEntity.setBeneficiario(beneficiarioBase);
+			});
+			beneficiarioBase.setDocumentos(documentos);
+		}
+
 		return converter.toResponse(repository.saveAndFlush(beneficiarioBase));
 	}
 
