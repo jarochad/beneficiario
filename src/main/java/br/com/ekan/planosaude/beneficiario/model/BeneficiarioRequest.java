@@ -35,5 +35,5 @@ public class BeneficiarioRequest {
 	private String dataNascimento;
 	
 	private List<DocumentoRequest> documentos;
-
+	
 }

@@ -11,7 +11,9 @@ public interface BeneficiarioService {
 	
 	public BeneficiarioResponse findByUuid(String uuid);
 	
-	public BeneficiarioResponse create(BeneficiarioRequest beneficiario); 
+	public BeneficiarioResponse create(BeneficiarioRequest beneficiario);
+	
+	public BeneficiarioResponse update(String uuid ,BeneficiarioRequest beneficiario); 
 	
 	public void remove(String uuid); 
 

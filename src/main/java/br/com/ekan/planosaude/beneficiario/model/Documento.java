@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -53,8 +54,10 @@ public class Documento {
 	@Column
 	private String uuid;
 	
-	@ManyToOne
-	@JoinColumn(name = "beneficiario_id")
+//	@ManyToOne
+//	@JoinColumn(name = "beneficiario_id")
+	@ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "beneficiario_id", referencedColumnName = "id")
 	private Beneficiario beneficiario;
 
 	@PrePersist  

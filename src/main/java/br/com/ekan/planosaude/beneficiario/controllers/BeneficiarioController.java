@@ -49,23 +49,23 @@ public class BeneficiarioController {
 	}
 	
 	@GetMapping(value = "findByUuid/{uuid}")
-	public ResponseEntity<BeneficiarioResponse> findByUuid(@PathVariable("uuid") String id){
-		return ResponseEntity.ok(service.findByUuid(id));
+	public ResponseEntity<BeneficiarioResponse> findByUuid(@PathVariable("uuid") String uuid){
+		return ResponseEntity.ok(service.findByUuid(uuid));
 				
 	}
 	
 	@DeleteMapping("remove/{uuid}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public ResponseEntity<Void> remove(@PathVariable("uuid") String id) {
-		 service.remove(id);
+	public ResponseEntity<Void> remove(@PathVariable("uuid") String uuid) {
+		 service.remove(uuid);
 		 return ResponseEntity.status(HttpStatus.OK).build();
 		
 	}
 	
 	@PutMapping("update/{uuid}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public ResponseEntity<BeneficiarioResponse> replace(@PathVariable("uuid")Long uuid, @RequestBody BeneficiarioRequest beneficiario) {
-		return ResponseEntity.ok(service.create(beneficiario));
+	public ResponseEntity<BeneficiarioResponse> update(@PathVariable("uuid")String uuid, @RequestBody BeneficiarioRequest beneficiario) {
+		return ResponseEntity.ok(service.update(uuid,beneficiario));
 		
 	}
 

@@ -28,7 +28,6 @@ public class BeneficiarioConverter {
 		}
 		b.setDocumentos(d);
 		return b;
-		
 	}
 	
 	public BeneficiarioResponse toResponse(Beneficiario beneficiario) {
@@ -38,5 +37,12 @@ public class BeneficiarioConverter {
 	public List<BeneficiarioResponse> toResponseList(List<Beneficiario> beneficiarios) {
 		return mapper.map(beneficiarios,new TypeToken<List<BeneficiarioResponse>>() {}.getType());
 	}
+
+	public Beneficiario EntityToEntity(Beneficiario beneficiarioUpdate, Beneficiario b) {
+				
+		return null;
+	}
+
+
 
 }
